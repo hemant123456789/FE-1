@@ -1,11 +1,13 @@
-import React from 'react'
-import Home from './Home'
+import React from 'react';
+import TopNavigation from '../src/components/TopNavigation';
+
+
 
 const App = () => {
+    
     return (
         <div>
-		<h2>Welcome</h2>
-            <Home />
+		<TopNavigation />
         </div>
     )
 }

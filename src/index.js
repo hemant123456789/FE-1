@@ -2,10 +2,23 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 
-ReactDOM.render(
-  <React.StrictMode>
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import routes from "./routes";
+
+// initialize rotues and navi links
+const initRoutes = () => (
+  <Router>
+    <div>
+    <React.StrictMode>
     <App />
   </React.StrictMode>,
+      {routes}
+    </div>
+  </Router>
+);
+const initializedRoutes = initRoutes();
+ReactDOM.render(
+  initializedRoutes,
   document.getElementById('root')
 );
 
