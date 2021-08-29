@@ -8,3 +8,6 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+
+
+  "build": "npm run cleanBuild && set \"GENERATE_SOURCEMAP=false\" && react-scripts build ",
