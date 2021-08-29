@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import "./Home.css"
+import axiosConfig from '../src/axiosConfig';
 
 // For fetching data
 import axios from 'axios'
@@ -11,7 +12,7 @@ const Home = () => {
     const [users, setUsers] = useState()
 
     useEffect(()=>{
-        axios.get('https://server-112.herokuapp.com/users/read')
+        axiosConfig.get('/users/read')
         .then(res => {
             setUsers(res.data)
         })
