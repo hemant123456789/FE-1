@@ -4,15 +4,19 @@ import App from './App';
 
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import routes from "./routes";
-
+import {Provider} from 'react-redux';
+import store from '../src/redux/store';
 // initialize rotues and navi links
 const initRoutes = () => (
   <Router>
     <div>
-    <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-      {routes}
+    <React.Fragment>
+      <Provider store={store} >
+         <App />,
+         {routes}
+      </Provider>
+    </React.Fragment>,
+     
     </div>
   </Router>
 );

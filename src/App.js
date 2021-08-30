@@ -1,6 +1,6 @@
 import React from 'react';
 import TopNavigation from '../src/components/TopNavigation';
-import Home from '../src/Home'
+import Toaster from '../src/components/Toaster';
 
 
 
@@ -9,7 +9,7 @@ const App = () => {
     return (
         <div>
 		<TopNavigation />
-        <Home />
+        <Toaster />
         </div>
     )
 }

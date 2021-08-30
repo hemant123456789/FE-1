@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -14,7 +14,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import SignUp from './SignUp'; 
 import { Link as RouterLink } from 'react-router-dom';
-
+import axiosConfig from '../axiosConfig';
+import {useDispatch} from 'react-redux';
+import {setMessage} from '../redux/actions/messageAction';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -50,6 +52,25 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Login() {
   const classes = useStyles();
+
+  /// test 
+
+  const dispatch = useDispatch();
+  const [message, setMsg] = useState({type: 'success', flag: false});
+  useEffect( ()=>{
+          
+    axiosConfig.get('/users/read')
+   .then( res => {
+       setMsg({type:'success', flag:true, message: 'success calling'});
+       dispatch(setMessage({type:'success', flag:true, message: 'success calling'}));
+   }).catch(err => {
+   console.log(err)
+   dispatch(setMessage({type:'warning', flag:true, message: 'success calling1'}));
+   })
+
+   setTimeout(()=>{ dispatch(setMessage({type:'warning', flag:true, message: 'success calling2'}))},4000);
+   
+},[]);
 
   return (
     <Container component="main" maxWidth="xs">
