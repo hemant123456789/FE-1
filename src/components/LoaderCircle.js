@@ -27,7 +27,7 @@ export default function LoaderCircle() {
   },[selector]);
 
   const handleClose = () => {
-    setOpen(false);
+    setOpen(true);
   };
   const handleToggle = () => {
     setOpen(!open);
