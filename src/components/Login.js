@@ -17,6 +17,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import axiosConfig from '../axiosConfig';
 import {useDispatch} from 'react-redux';
 import {setMessage} from '../redux/actions/messageAction';
+import {setLoader} from '../redux/actions/loaderAction';
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
@@ -58,9 +59,10 @@ export default function Login() {
   const dispatch = useDispatch();
   const [message, setMsg] = useState({type: 'success', flag: false});
   useEffect( ()=>{
-          
+    dispatch(setLoader(true));
     axiosConfig.get('/users/read')
    .then( res => {
+    setTimeout(()=>{ dispatch(setLoader(false))}, 4000);   
        setMsg({type:'success', flag:true, message: 'success calling'});
        dispatch(setMessage({type:'success', flag:true, message: 'success calling'}));
    }).catch(err => {
