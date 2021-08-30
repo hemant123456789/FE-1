@@ -3,6 +3,9 @@ import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import SignUp from '../src/components/SignUp'; 
 import Login from '../src/components/Login';
 import ResetPassword from '../src/components/ResetPassword';
+import AdminDashboard from '../src/components/AdminDashboard';
+import UserDashboard from '../src/components/UserDashboard';
+import ProtectedRoute from './ProtectedRoute';
 // your components
 const Home = () => <h1>Home</h1>;
 const About = () => <h1>About</h1>;
@@ -16,6 +19,8 @@ const routes = (
     <Route path="/about" component={About} />
     <Route path="/signup" component={SignUp} />
     <Route path="/reset" component={ResetPassword} />
+    <ProtectedRoute exact path="/admin" component={AdminDashboard} />
+    <ProtectedRoute exact path="/user" component={UserDashboard} />
   </Switch>
 );
 
