@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -15,6 +15,10 @@ import Container from '@material-ui/core/Container';
 import { Link as RouterLink } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { deepOrange } from '@material-ui/core/colors';
+// Required imports from the example.
+import {  InputAdornment, IconButton } from "@material-ui/core";
+import Visibility from "@material-ui/icons/Visibility";
+import VisibilityOff from "@material-ui/icons/VisibilityOff";
 
 function Copyright() {
   return (
@@ -55,9 +59,46 @@ export default function SignUp() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
-  const onSubmit = (data) => console.log(data);
+  } = useForm(
+    {
+      mode: 'all',
+      reValidateMode: 'all',
+      defaultValues: {
+        name: null,
+    email:null,
+    phone: null,
+    password: null
+      },
+    }
+  );
+  const [state, setState] = useState({
+    name: null,
+    email:null,
+    phone: null,
+    password: null
+  });
 
+  // Add these variables to your component to track the state
+const [showPassword, setShowPassword] = useState(false);
+const handleClickShowPassword = () => setShowPassword(!showPassword);
+const handleMouseDownPassword = () => setShowPassword(!showPassword);
+
+  const handleInputChange = (event) => {
+    setState((prevProps) => ({
+      ...prevProps,
+      [event.target.name]: event.target.value
+    }));
+  };
+
+  const onSubmit = (data) => {
+    console.log(errors);
+   console.log('data ***************', data);
+   console.log('state************', state)
+    
+  }
+  const onError = (errors, e) => console.log(errors,e);
+  
+  
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -68,22 +109,28 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-        <form className={classes.form} noValidate onSubmit={handleSubmit(onSubmit)}>
+        <form className={classes.form} noValidate onSubmit={handleSubmit(onSubmit, onError)}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
+            <Grid item xs={12}>
               <TextField
-                autoComplete="fname"
-                name="firstName"
+                name="name"
                 variant="filled"
                 required
                 fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-                {...register('firstName',  { required: true })}  
+                id="name"
+                value={state.name || ''}
+                label="Name" inputProps={{
+                  autoComplete: 'none'
+               }}
+               error={errors.name instanceof Object ? true : false}
+               helperText={errors.name   && 'Name is required '}
+                {...register('name',  { required: true })}  
+                onChange={e => {
+                  handleInputChange(e);
+              }}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
+           {/*  <Grid item xs={12} sm={6}>
               <TextField
                 variant="filled"
                 required
@@ -92,29 +139,82 @@ export default function SignUp() {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
-              />
-            </Grid>
+                {...register('lName',  { required: true })}  
+                />
+  </Grid> */}
             <Grid item xs={12}>
               <TextField
                 variant="filled"
                 required
+                error={errors.email instanceof Object ? true : false}
+                value={state.email || ''}
+                helperText={errors.email && 'Email is required '}
                 fullWidth
                 id="email"
-                label="Email Address"
+                label="Email"
                 name="email"
-                autoComplete="email"
+                inputProps={{
+                  autoComplete: 'none'
+               }}
+                {...register('email',  { required: true })}  
+                onChange={e => {
+                  handleInputChange(e);
+              }}
+              />
+            </Grid>
+            <Grid item xs={12}>
+            <TextField
+                variant="filled"
+                required
+                value={state.phone || ''}
+                error={errors.phone instanceof Object ? true : false}
+                helperText={errors.phone && 'Phone is required '}
+                fullWidth
+                id="phone"
+                label="phone"
+                name="phone"  
+                inputProps={{
+                  autoComplete: 'none'
+               }}
+                {...register('phone',  { required: true })}  
+                onChange={e => {
+                  handleInputChange(e);
+              }}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 variant="filled"
                 required
+                value={state.password || ''}
+                error={errors.password instanceof Object ? true : false}
+                helperText={errors.password && 'Password is required '}
                 fullWidth
                 name="password"
                 label="Password"
-                type="password"
+                type={showPassword ? 'text' : 'password'}
+                inputProps={{
+                  autoComplete: 'none'
+               }}
                 id="password"
-                autoComplete="current-password"
+                {...register('password',  { required: true })}  
+                onChange={e => {
+                  handleInputChange(e);
+              }}
+
+              InputProps={{ // <-- This is where the toggle button is added.
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
               />
             </Grid>
             <Grid item xs={12}>
