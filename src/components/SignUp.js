@@ -65,17 +65,19 @@ export default function SignUp() {
       reValidateMode: 'all',
       defaultValues: {
         name: null,
-    email:null,
-    phone: null,
-    password: null
+      email:null,
+      phone: null,
+      password: null,
+      address: null,
       },
     }
   );
   const [state, setState] = useState({
-    name: null,
-    email:null,
-    phone: null,
-    password: null
+      name: null,
+      email:null,
+      phone: null,
+      password: null,
+      address: null
   });
 
   // Add these variables to your component to track the state
@@ -181,6 +183,31 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
                   handleInputChange(e);
               }}
               />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                id="filled-multiline-static"
+                label="Address"
+                multiline
+                rows={4}
+                fullWidth
+                defaultValue=""
+                variant="filled"
+                value={state.address || ''}
+                error={errors.address instanceof Object ? true : false}
+                helperText={errors.address && 'Address is required '}
+                name="address"
+                label="address"
+                inputProps={{
+                  autoComplete: 'none'
+               }}
+                id="address"
+                {...register('address',  { required: true })}  
+                onChange={e => {
+                  handleInputChange(e);
+              }}
+
+            />
             </Grid>
             <Grid item xs={12}>
               <TextField
