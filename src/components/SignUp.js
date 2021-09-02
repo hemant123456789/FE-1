@@ -228,7 +228,6 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
                 onChange={e => {
                   handleInputChange(e);
               }}
-
               InputProps={{ // <-- This is where the toggle button is added.
                 endAdornment: (
                   <InputAdornment position="end">
