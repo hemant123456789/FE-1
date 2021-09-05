@@ -14,6 +14,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { Link as RouterLink } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
+import { ErrorMessage } from '@hookform/error-message';
 import { deepOrange } from '@material-ui/core/colors';
 // Required imports from the example.
 import {  InputAdornment, IconButton } from "@material-ui/core";
@@ -150,7 +151,7 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
                 required
                 error={errors.email instanceof Object ? true : false}
                 value={state.email || ''}
-                helperText={errors.email && 'Email is required '}
+                helperText={errors.email && errors.email.message}
                 fullWidth
                 id="email"
                 label="Email"
@@ -158,7 +159,16 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
                 inputProps={{
                   autoComplete: 'none'
                }}
-                {...register('email',  { required: true })}  
+                {...register('email',  {  required: "E mail is required.", 
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "Enter a valid e-mail address",
+                  },
+                  maxLength: {
+                    value: 30,
+                    message: "E mail exceed maxLength."
+                  }
+              })}  
                 onChange={e => {
                   handleInputChange(e);
               }}
@@ -189,6 +199,7 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
                 id="filled-multiline-static"
                 label="Address"
                 multiline
+                required
                 rows={4}
                 fullWidth
                 variant="filled"
