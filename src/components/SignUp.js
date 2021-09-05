@@ -191,7 +191,6 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
                 multiline
                 rows={4}
                 fullWidth
-                defaultValue=""
                 variant="filled"
                 value={state.address || ''}
                 error={errors.address instanceof Object ? true : false}
