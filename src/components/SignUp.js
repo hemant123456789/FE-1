@@ -69,6 +69,7 @@ export default function SignUp() {
       email:null,
       phone: null,
       password: null,
+      confirmPassword: null,
       address: null,
       },
     }
@@ -78,13 +79,15 @@ export default function SignUp() {
       email:null,
       phone: null,
       password: null,
+      confirmPassword: null,
       address: null
   });
 
   // Add these variables to your component to track the state
 const [showPassword, setShowPassword] = useState(false);
-const handleClickShowPassword = () => setShowPassword(!showPassword);
-const handleMouseDownPassword = () => setShowPassword(!showPassword);
+const [confirmPassword, setShowConfirmPassword] = useState(false);
+const handleClickShowPassword = (eventName,type) => eventName(!type);
+const handleMouseDownPassword = (eventName, type) => eventName(!type);
 
   const handleInputChange = (event) => {
     setState((prevProps) => ({
@@ -180,7 +183,7 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
                 required
                 value={state.phone || ''}
                 error={errors.phone instanceof Object ? true : false}
-                helperText={errors.phone && 'Phone is required '}
+                helperText={errors.phone && errors.phone.message}
                 fullWidth
                 id="phone"
                 label="phone"
@@ -188,7 +191,14 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
                 inputProps={{
                   autoComplete: 'none'
                }}
-                {...register('phone',  { required: true })}  
+                {...register('phone',  { 
+                required: 'Phone is required',
+                pattern: {
+                  value: /^[0-9]*$/g,
+                  message: "Enter a valid phone",
+                },
+               }
+               )}  
                 onChange={e => {
                   handleInputChange(e);
               }}
@@ -205,14 +215,19 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
                 variant="filled"
                 value={state.address || ''}
                 error={errors.address instanceof Object ? true : false}
-                helperText={errors.address && 'Address is required '}
+                helperText={errors.address && errors.address.message}
                 name="address"
                 label="address"
                 inputProps={{
                   autoComplete: 'none'
                }}
                 id="address"
-                {...register('address',  { required: true })}  
+                {...register('address',  { required: 'Address is required', 
+                maxLength: {
+                  value: 2000,
+                  message: "Address exceed maxLength."
+                }
+              })}  
                 onChange={e => {
                   handleInputChange(e);
               }}
@@ -243,8 +258,8 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
                   <InputAdornment position="end">
                     <IconButton
                       aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
+                      onClick={() => handleClickShowPassword(setShowPassword, showPassword)}
+                      onMouseDown={() => handleMouseDownPassword(setShowPassword, showPassword)}
                     >
                       {showPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
@@ -253,6 +268,41 @@ const handleMouseDownPassword = () => setShowPassword(!showPassword);
               }}
               />
             </Grid>
+            <Grid item xs={12}>
+              <TextField
+                variant="filled"
+                required
+                value={state.confirmPassword || ''}
+                error={errors.confirmPassword instanceof Object ? true : false}
+                helperText={errors.confirmPassword && 'Confirm Password is required '}
+                fullWidth
+                name="confirmPassword"
+                label="Confirm Password"
+                type={showPassword ? 'text' : 'password'}
+                inputProps={{
+                  autoComplete: 'none'
+               }}
+                id="confirmPassword"
+                {...register('confirmPassword',  { required: true })}  
+                onChange={e => {
+                  handleInputChange(e);
+              }}
+              InputProps={{ // <-- This is where the toggle button is added.
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={() =>handleClickShowPassword(setShowConfirmPassword, confirmPassword)}
+                      onMouseDown={() =>handleMouseDownPassword(setShowConfirmPassword, confirmPassword)}
+                    >
+                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                    </IconButton>
+                  </InputAdornment>
+                )
+              }}
+              />
+            </Grid>
+           
             <Grid item xs={12}>
               <FormControlLabel
                 control={<Checkbox value="allowExtraEmails" color="primary" />}
