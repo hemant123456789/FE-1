@@ -20,6 +20,7 @@ import { deepOrange } from '@material-ui/core/colors';
 import {  InputAdornment, IconButton } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import { useHistory } from "react-router-dom"
 
 function Copyright() {
   return (
@@ -56,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SignUp() {
   const classes = useStyles();
+  const history = useHistory()
   const {
     register,
     handleSubmit,
@@ -105,7 +107,7 @@ password.current = watch("password", "");
     console.log(errors);
    console.log('data ***************', data);
    console.log('state************', state)
-    
+   history.push("/")
   }
   const onError = (errors, e) => console.log(errors,e);
   
