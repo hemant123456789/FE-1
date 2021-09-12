@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -59,6 +59,7 @@ export default function SignUp() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm(
     {
@@ -88,6 +89,10 @@ const [showPassword, setShowPassword] = useState(false);
 const [confirmPassword, setShowConfirmPassword] = useState(false);
 const handleClickShowPassword = (eventName,type) => eventName(!type);
 const handleMouseDownPassword = (eventName, type) => eventName(!type);
+
+
+const password = useRef({});
+password.current = watch("password", "");
 
   const handleInputChange = (event) => {
     setState((prevProps) => ({
@@ -240,7 +245,7 @@ const handleMouseDownPassword = (eventName, type) => eventName(!type);
                 required
                 value={state.password || ''}
                 error={errors.password instanceof Object ? true : false}
-                helperText={errors.password && 'Password is required '}
+                helperText={errors.password && errors.password.message}
                 fullWidth
                 name="password"
                 label="Password"
@@ -249,7 +254,14 @@ const handleMouseDownPassword = (eventName, type) => eventName(!type);
                   autoComplete: 'none'
                }}
                 id="password"
-                {...register('password',  { required: true })}  
+                {...register('password',  { required: 'Password is required', 
+                  minLength: {
+                    value: 8,
+                    message: "Password should conatin 8 characters."
+                  }
+                
+                
+                })}  
                 onChange={e => {
                   handleInputChange(e);
               }}
@@ -274,16 +286,21 @@ const handleMouseDownPassword = (eventName, type) => eventName(!type);
                 required
                 value={state.confirmPassword || ''}
                 error={errors.confirmPassword instanceof Object ? true : false}
-                helperText={errors.confirmPassword && 'Confirm Password is required '}
+                helperText={errors.confirmPassword && errors.confirmPassword.message}
                 fullWidth
                 name="confirmPassword"
                 label="Confirm Password"
-                type={showPassword ? 'text' : 'password'}
+                type={confirmPassword ? 'text' : 'password'}
                 inputProps={{
                   autoComplete: 'none'
                }}
                 id="confirmPassword"
-                {...register('confirmPassword',  { required: true })}  
+                {...register('confirmPassword',  {
+                   required: 'Confirm Password is required',
+                  validate: value =>
+                  value === password.current || "The passwords do not match"
+                 }
+                 )}  
                 onChange={e => {
                   handleInputChange(e);
               }}
@@ -295,7 +312,7 @@ const handleMouseDownPassword = (eventName, type) => eventName(!type);
                       onClick={() =>handleClickShowPassword(setShowConfirmPassword, confirmPassword)}
                       onMouseDown={() =>handleMouseDownPassword(setShowConfirmPassword, confirmPassword)}
                     >
-                      {showPassword ? <Visibility /> : <VisibilityOff />}
+                      {confirmPassword ? <Visibility /> : <VisibilityOff />}
                     </IconButton>
                   </InputAdornment>
                 )
