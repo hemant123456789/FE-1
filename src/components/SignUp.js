@@ -32,6 +32,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CancelIcon from '@mui/icons-material/Cancel';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+import * as _ from 'lodash';
 
 function Copyright() {
   return (
@@ -44,6 +45,17 @@ function Copyright() {
       {'.'}
     </Typography>
   );
+}
+function debounce(func, wait) {
+  let timeout;
+  return function(...args) {
+    const context = this;
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      timeout = null;
+      func.apply(context, args);
+    }, wait);
+  };
 }
 
 const useStyles = makeStyles((theme) => ({
@@ -114,6 +126,12 @@ password.current = watch("password", "");
       [event.target.name]: event.target.value
     }));
   };
+
+  const validateInput=(obj) => { 
+    console.log(obj);
+    console.log('validate email into')
+    
+  }
 
   const onSubmit = (data) => {
     
@@ -206,6 +224,7 @@ password.current = watch("password", "");
                 onChange={e => {
                   handleInputChange(e);
               }}
+              onBlur={e =>validateInput({'email':state.email})}
               />
                
             </Grid>
