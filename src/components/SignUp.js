@@ -21,6 +21,17 @@ import {  InputAdornment, IconButton } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { useHistory } from "react-router-dom"
+import {useDispatch} from 'react-redux';
+import {setMessage} from '../redux/actions/messageAction';
+import {setLoader} from '../redux/actions/loaderAction';
+import axiosConfig from '../axiosConfig';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import CheckIcon from '@mui/icons-material/Check';
+import { SvgIcon } from '@mui/material';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
+import Alert from '@mui/material/Alert';
+import Stack from '@mui/material/Stack';
 
 function Copyright() {
   return (
@@ -92,6 +103,7 @@ const [confirmPassword, setShowConfirmPassword] = useState(false);
 const handleClickShowPassword = (eventName,type) => eventName(!type);
 const handleMouseDownPassword = (eventName, type) => eventName(!type);
 
+const dispatch = useDispatch();
 
 const password = useRef({});
 password.current = watch("password", "");
@@ -104,10 +116,22 @@ password.current = watch("password", "");
   };
 
   const onSubmit = (data) => {
-    console.log(errors);
-   console.log('data ***************', data);
-   console.log('state************', state)
-   history.push("/")
+    
+   //console.log('data ***************', data);
+   //console.log('state************', state)
+   dispatch(setLoader(true));
+
+   axiosConfig.post('/users/create', data)
+   .then(async (res) => {
+       dispatch(setLoader(false)); //setTimeout(()=>{ dispatch(setLoader(false))}, 4000);   
+      await dispatch(setMessage({type:'success', flag:true, message: 'User created successfully!'}));
+       setTimeout(() =>history.push("/"), 1000);
+   }).catch(err => {
+   console.log(err)
+       dispatch(setMessage({type:'warning', flag:true, message: 'Error , Something went wrong'}));
+   })
+
+   
   }
   const onError = (errors, e) => console.log(errors,e);
   
@@ -183,6 +207,18 @@ password.current = watch("password", "");
                   handleInputChange(e);
               }}
               />
+               
+            </Grid>
+           { /* <Grid item xs={1}> {/*<CircularProgress size={10}  />*/}
+           {/* <SvgIcon component={CheckCircleIcon} color={'success'} fontSize={'medium'} />*/}
+            
+            {/*<SvgIcon component={CancelIcon} color={'error'} fontSize={'medium'} />*/}
+           {/* </Grid>*/}
+            <Grid item xs={12}>
+             <Stack sx={{ width: '100%' }} spacing={2}>
+             <Alert severity="success">This is a success alert — check it out!</Alert>
+             {/* <Alert severity="error">This is an error alert — check it out!</Alert>*/}
+            </Stack>
             </Grid>
             <Grid item xs={12}>
             <TextField
