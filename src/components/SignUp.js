@@ -114,6 +114,8 @@ const [showPassword, setShowPassword] = useState(false);
 const [confirmPassword, setShowConfirmPassword] = useState(false);
 const handleClickShowPassword = (eventName,type) => eventName(!type);
 const handleMouseDownPassword = (eventName, type) => eventName(!type);
+const [showSmallLoader, setSmallLoader] = useState(false);
+const [showEmailMsg, setEmailMsg] = useState({value: false, type: null, message: null});
 
 const dispatch = useDispatch();
 
@@ -130,6 +132,24 @@ password.current = watch("password", "");
   const validateInput=(obj) => { 
     console.log(obj);
     console.log('validate email into')
+    setSmallLoader(true);
+    setEmailMsg({value: false, type: null, message: null})
+    axiosConfig.post('/users/validate', obj).then((res) => {
+      const flag = res.data.data;
+      setSmallLoader(false);
+      if (flag === false) {
+         setEmailMsg({value: true, type: 'success', message: 'Email is validated successfully'});
+       } else {
+          setEmailMsg({value: true, type: 'error', message: 'Email already exists!'});
+       }
+       console.log(showEmailMsg)
+    }).catch(err => {
+      console.log(err)
+      setSmallLoader(false);
+      setEmailMsg(false);
+      dispatch(setMessage({type:'warning', flag:true, message: 'Error , Something went wrong'}));
+      })
+   
     
   }
 
@@ -197,7 +217,7 @@ password.current = watch("password", "");
                 {...register('lName',  { required: true })}  
                 />
   </Grid> */}
-            <Grid item xs={12}>
+            <Grid item xs={ showSmallLoader ? 11 : 12}>
               <TextField
                 variant="filled"
                 required
@@ -223,21 +243,29 @@ password.current = watch("password", "");
               })}  
                 onChange={e => {
                   handleInputChange(e);
+                 
               }}
-              onBlur={e =>validateInput({'email':state.email})}
+             onBlur={e => {validateInput({'email':state.email, keyName: 'email'}) }}
               />
                
             </Grid>
-           { /* <Grid item xs={1}> {/*<CircularProgress size={10}  />*/}
+           <Grid item xs={1}>
+            {
+              showSmallLoader ?  <CircularProgress size={10}  /> : null
+             }
+            
            {/* <SvgIcon component={CheckCircleIcon} color={'success'} fontSize={'medium'} />*/}
             
             {/*<SvgIcon component={CancelIcon} color={'error'} fontSize={'medium'} />*/}
-           {/* </Grid>*/}
+            </Grid>
             <Grid item xs={12}>
+              {
+               showEmailMsg.value == true ? 
              <Stack sx={{ width: '100%' }} spacing={2}>
-             <Alert severity="success">This is a success alert — check it out!</Alert>
-             {/* <Alert severity="error">This is an error alert — check it out!</Alert>*/}
-            </Stack>
+             <Alert severity={showEmailMsg.type}>{showEmailMsg.message} </Alert>
+            </Stack> : null
+                
+              }
             </Grid>
             <Grid item xs={12}>
             <TextField
