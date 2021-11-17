@@ -4,6 +4,7 @@ import axios from 'axios';
 const instance = axios.create({
 // .. where we make our configurations
     baseURL: 'https://server-112.herokuapp.com'
+    
    // baseURL: 'http://localhost:5000'
 });
 // Where you would set stuff like your 'Authorization' header, etc ...
